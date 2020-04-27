@@ -1,10 +1,10 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import './App.css';
 
 import React, { Props, ReactComponentElement, useState } from 'react';
 
 import { ReactComponent as ArrowIcon } from './icons/arrow.svg';
 import { ReactComponent as BellIcon } from './icons/bell.svg';
-import { ReactComponent as BoltIcon } from './icons/bolt.svg';
 import { ReactComponent as CaretIcon } from './icons/caret.svg';
 import { ReactComponent as ChevronIcon } from './icons/chevron.svg';
 import { ReactComponent as CogIcon } from './icons/cog.svg';
@@ -15,14 +15,19 @@ import { CSSTransition } from 'react-transition-group';
 
 function App() {
   return (
-    <Navbar>
-      <NavItem icon={<PlusIcon />} />
-      <NavItem icon={<BellIcon />} />
-      <NavItem icon={<MessengerIcon />} />
-      <NavItem icon={<CaretIcon />}>
-        <DropdownMenu />
-      </NavItem>
-    </Navbar>
+    <>
+      <Navbar>
+        <NavItem icon={<PlusIcon />} />
+        <NavItem icon={<BellIcon />} />
+        <NavItem icon={<MessengerIcon />} />
+        <NavItem icon={<CaretIcon />}>
+          <DropdownMenu />
+        </NavItem>
+      </Navbar>
+      <main>
+        Hello World !
+      </main>
+    </>
   );
 }
 
