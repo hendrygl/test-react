@@ -1,0 +1,20 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: Install Dependencies
+    image: node:10.20.1-alpine3.11
+    commands:
+      - yarn
+  - name: Run Test
+    image: node:10.20.1-alpine3.11
+    commands:
+      - echo "hello"
+      - echo "world"
+      - yarn test
+  - name: Run Build
+    image: node:10.20.1-alpine3.11
+    commands:
+      - echo "build"
+      - yarn build
