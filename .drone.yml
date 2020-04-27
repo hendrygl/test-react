@@ -6,6 +6,9 @@ trigger:
   event:
     - pull_request
 
+clone:
+  depth: 1
+
 steps:
   - name: Install Dependencies
     image: node:10.20.1-alpine3.11
@@ -14,8 +17,7 @@ steps:
   - name: Run Test
     image: node:10.20.1-alpine3.11
     commands:
-      - echo "hello"
-      - echo "world"
+      - echo "Test"
       - yarn test
   - name: Run Build
     image: node:10.20.1-alpine3.11

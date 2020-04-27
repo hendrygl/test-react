@@ -26,6 +26,8 @@ function App() {
       </Navbar>
       <main>
         Hello World !
+
+        <div>Content TEsting</div>
       </main>
     </>
   );
