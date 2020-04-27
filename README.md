@@ -1,3 +1,5 @@
+[![Build Status](https://cloud.drone.io/api/badges/hendryfudiko/test-react/status.svg)](https://cloud.drone.io/hendryfudiko/test-react)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
