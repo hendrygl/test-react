@@ -5,22 +5,48 @@ name: default
 trigger:
   event:
     - pull_request
-
-clone:
-  depth: 1
+    - push
 
 steps:
   - name: Install Dependencies
     image: node:10.20.1-alpine3.11
     commands:
       - yarn
+    when:
+      event:
+        include:
+        - pull_request
   - name: Run Test
     image: node:10.20.1-alpine3.11
     commands:
       - echo "Test"
       - yarn test
+    when:
+      event:
+        include:
+        - pull_request
   - name: Run Build
     image: node:10.20.1-alpine3.11
     commands:
       - echo "build"
       - yarn build
+    when:
+      event:
+        include:
+        - pull_request
+  - name: Deploy to Firebase
+    image: node:10.20.1-alpine3.11
+    environment:
+      FIREBASE_TOKEN:
+        from_secret: FIREBASE_TOKEN
+    commands:
+      - yarn
+      - yarn global add firebase-tools
+      - yarn build
+      - firebase deploy --token "$${FIREBASE_TOKEN}"
+    when:
+      event:
+        include:
+        - push
+      branch:
+      - master
