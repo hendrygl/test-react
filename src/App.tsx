@@ -15,14 +15,19 @@ import { CSSTransition } from 'react-transition-group';
 
 function App() {
   return (
-    <Navbar>
-      <NavItem icon={<PlusIcon />} />
-      <NavItem icon={<BellIcon />} />
-      <NavItem icon={<MessengerIcon />} />
-      <NavItem icon={<CaretIcon />}>
-        <DropdownMenu />
-      </NavItem>
-    </Navbar>
+    <>
+      <Navbar>
+        <NavItem icon={<PlusIcon />} />
+        <NavItem icon={<BellIcon />} />
+        <NavItem icon={<MessengerIcon />} />
+        <NavItem icon={<CaretIcon />}>
+          <DropdownMenu />
+        </NavItem>
+      </Navbar>
+      <main>
+        Hello World !
+      </main>
+    </>
   );
 }
 
