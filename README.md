@@ -1,46 +1,114 @@
-[![Build Status](https://cloud.drone.io/api/badges/hendryfudiko/test-react/status.svg)](https://cloud.drone.io/hendryfudiko/test-react)
+# Livepeer Protocol
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ethereum smart contracts used for the Livepeer protocol. These contracts govern the logic for:
 
-## Available Scripts
+* Livepeer Token (LPT) ownership
+* Bonding and delegating LPT to elect active workers
+* Distributing inflationary rewards and fees to active participants
+* Time progression in the protocol
+* ETH escrow and ticket validation for a probabilistic micropayment protocol used to pay for transcoding work
 
-In the project directory, you can run:
+## Documentation
 
-### `yarn start`
+For a general overview of the protocol see:
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- The [whitepaper](http://github.com/livepeer/wiki/blob/master/WHITEPAPER.md) for the original proposal
+- The [Streamflow proposal paper](https://github.com/livepeer/wiki/blob/master/STREAMFLOW.md) for the Streamflow scalability upgrade proposal
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The contracts are based off of the [technical protocol specification](https://github.com/livepeer/wiki/tree/master/spec).
 
-### `yarn test`
+## Development
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+All contributions and bug fixes are welcome as pull requests back into the repo.
 
-### `yarn build`
+### ERC20 Note
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The Livepeer token is implemented as an ERC20 token in `token/LivepeerToken.sol` which inherits from the OpenZeppelin ERC20 token contract and all implemented ERC20 functions will revert if the operation is not successful. However, the [ERC20 spec](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md) does not require functions to revert and instead requires functions to return true if the operation succeed and false if the operation fails. The contracts `bonding/BondingManager.sol` and `token/Minter.sol` do not check the return value of ERC20 functions and instead assume that they will revert if the operation fails. The Livepeer token contract is already [deployed on mainnet](https://github.com/livepeer/wiki/blob/master/Deployed-Contract-Addresses.md) and its implementation should not change so this is not a problem. However, if for some reason the implementation ever does change, developers should keep in mind that `bonding/BondingManager.sol` and `token/Minter.sol` do not check the return value of ERC20 functions.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### ABIEncoderV2 Note
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+At the moment, the following contract files use the experimental ABIEncoderV2 Solidity compiler feature:
 
-### `yarn eject`
+- `pm/TicketBroker.sol`
+- `pm/MReserve.sol`
+- `pm/MixinReserve.sol`
+- `pm/MixinTicketBrokerCore.sol`
+- `pm/MixinWrappers.sol`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+There have been bugs related to ABIEncoderV2 in the past and it is still experimental so developers should pay attention to the [list of bugs associated with ABIEncoderV2](https://solidity.readthedocs.io/en/latest/bugs.html) when making any contract code changes that involve ABIEncoderV2 and should make sure to use a compiler version with the necessary fixes. The primary motivation behind enabling ABIEncoderV2 in these contract files is to allow for Solidity structs to be passed as function arguments. 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Install 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Make sure Node.js v10.17.0 is installed.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+git clone https://github.com/livepeer/protocol.git
+cd protocol
+npm install
+```
 
-## Learn More
+### Build
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Compile the contracts and build artifacts used for testing and deployment.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm run compile
+```
+
+### Clean
+
+Remove existing build artifacts.
+
+```
+npm run clean
+```
+
+### Lint
+
+The project uses [ESLint](https://github.com/eslint/eslint) for Javascript linting and [Solium](https://github.com/duaraghav8/Ethlint) for Solidity linting.
+
+```
+npm run lint
+```
+
+### Run Tests
+
+All tests will be executed against an instance of [ganache-cli](https://github.com/trufflesuite/ganache-cli).
+
+To run all tests:
+
+```
+npm run test
+```
+
+To run unit tests only:
+
+```
+npm run test:unit
+```
+
+To run integration tests only:
+
+```
+npm run test:integration
+```
+
+To run gas reporting tests (via [eth-gas-reporter](https://github.com/cgewecke/eth-gas-reporter)) only:
+
+```
+npm run test:gas
+```
+
+To run tests with coverage (via [solidity-coverage](https://github.com/sc-forks/solidity-coverage)) reporting:
+
+```
+npm run test:coverage
+```
+
+## Deployment
+
+Make sure that an ETH node is accessible and that the network being deployed to is supported by the `truffle.js` configuration.
+
+```
+npm run migrate
+```
